@@ -1,0 +1,10 @@
+{
+  "id": "xirang-workbench",
+  "name": "Xirang Workbench",
+  "version": "0.6.0",
+  "minAppVersion": "1.5.0",
+  "description": "A read-only project dashboard, calendar, note health, link health, and local index monitor for structured Obsidian vaults.",
+  "author": "thisbo",
+  "authorUrl": "",
+  "isDesktopOnly": true
+}
