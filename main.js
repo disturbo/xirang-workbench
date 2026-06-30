@@ -131,7 +131,7 @@ var V9WorkbenchPlugin = class extends import_obsidian.Plugin {
     this.statusBarEl.setText("Xirang: \u8BFB\u53D6\u4E2D");
     this.statusBarEl.onClickEvent(() => this.openDashboard());
     this.addRibbonIcon("monitor", "\u6253\u5F00\u606F\u58E4\u4E3B\u63A7\u53F0", () => this.openDashboard());
-    this.addRibbonIcon("calendar-days", "\u6253\u5F00\u606F\u58E4\u65E5\u5386", () => this.openCalendar());
+    this.addRibbonIcon("calendar", "\u6253\u5F00\u606F\u58E4\u65E5\u5386", () => this.openCalendar());
     this.addCommand({
       id: "open-v9-dashboard",
       name: "\u6253\u5F00\u606F\u58E4\u4E3B\u63A7\u53F0",
@@ -180,7 +180,13 @@ var V9WorkbenchPlugin = class extends import_obsidian.Plugin {
     let leaf = this.app.workspace.getLeavesOfType(CALENDAR_VIEW_TYPE)[0];
     if (!leaf) {
       leaf = (_a = this.app.workspace.getLeftLeaf(false)) != null ? _a : this.app.workspace.getLeaf(true);
-      await leaf.setViewState({ type: CALENDAR_VIEW_TYPE, active: true });
+      await leaf.setViewState({
+        type: CALENDAR_VIEW_TYPE,
+        active: true,
+        state: {},
+        icon: "calendar",
+        title: "\u606F\u58E4\u65E5\u5386"
+      });
     }
     this.app.workspace.revealLeaf(leaf);
   }
@@ -433,7 +439,7 @@ var V9CalendarView = class extends import_obsidian.ItemView {
     return "\u606F\u58E4\u65E5\u5386";
   }
   getIcon() {
-    return "calendar-days";
+    return "calendar";
   }
   async onOpen() {
     await this.refresh();
