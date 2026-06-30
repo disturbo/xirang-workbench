@@ -89,6 +89,15 @@ var MAINLAND_HOLIDAYS = {
   "2026-10-07": { type: "holiday", label: "\u56FD\u5E86", name: "\u56FD\u5E86\u8282\u5047\u671F" },
   "2026-10-10": { type: "workday", label: "\u73ED", name: "\u56FD\u5E86\u8282\u8C03\u4F11\u4E0A\u73ED" }
 };
+var HOLIDAY_EXPLAINERS = {
+  "\u5143\u65E6": "\u516C\u5386\u65B0\u5E74\uFF0C\u6807\u5FD7\u4E00\u5E74\u7684\u5F00\u59CB\u3002\u5728\u73B0\u4EE3\u4E2D\u56FD\u8282\u5047\u65E5\u4F53\u7CFB\u91CC\uFF0C\u5B83\u662F\u4ECE\u65E7\u5C81\u5207\u5230\u65B0\u5E74\u7684\u516C\u5171\u65F6\u95F4\u8282\u70B9\u3002",
+  "\u6625\u8282": "\u519C\u5386\u65B0\u5E74\uFF0C\u627F\u8F7D\u8F9E\u65E7\u8FCE\u65B0\u3001\u56E2\u5706\u5B88\u5C81\u4E0E\u5C81\u9996\u7948\u5E74\u4F20\u7EDF\uFF0C\u662F\u4E2D\u56FD\u6700\u91CD\u8981\u7684\u4F20\u7EDF\u8282\u65E5\u4E4B\u4E00\u3002",
+  "\u6E05\u660E": "\u4E8C\u5341\u56DB\u8282\u6C14\u4E4B\u4E00\uFF0C\u4E5F\u662F\u614E\u7EC8\u8FFD\u8FDC\u7684\u4F20\u7EDF\u8282\u65E5\uFF0C\u5E38\u89C1\u4E60\u4FD7\u5305\u62EC\u626B\u5893\u796D\u7956\u3001\u8E0F\u9752\u7B49\u3002",
+  "\u52B3\u52A8": "\u6E90\u4E8E\u56FD\u9645\u52B3\u52A8\u8282\uFF0C\u4EE5\u7EAA\u5FF5\u52B3\u52A8\u8005\u6743\u76CA\u4E0E\u73B0\u4EE3\u52B3\u52A8\u5236\u5EA6\uFF0C\u4E5F\u662F\u5411\u5404\u884C\u5404\u4E1A\u52B3\u52A8\u8005\u81F4\u610F\u7684\u516C\u5171\u8282\u65E5\u3002",
+  "\u7AEF\u5348": "\u590F\u5B63\u4F20\u7EDF\u8282\u65E5\uFF0C\u6C11\u95F4\u5E38\u4E0E\u7EAA\u5FF5\u5C48\u539F\u3001\u9F99\u821F\u7ADE\u6E21\u3001\u98DF\u7CBD\u3001\u6302\u827E\u8349\u7B49\u4E60\u4FD7\u8054\u7CFB\u5728\u4E00\u8D77\u3002",
+  "\u4E2D\u79CB": "\u519C\u5386\u516B\u6708\u5341\u4E94\u7684\u56E2\u5706\u8282\u65E5\uFF0C\u7531\u79CB\u5915\u796D\u6708\u7B49\u4F20\u7EDF\u6F14\u53D8\u800C\u6765\uFF0C\u8D4F\u6708\u3001\u98DF\u6708\u997C\u5BC4\u6258\u56E2\u5706\u610F\u8C61\u3002",
+  "\u56FD\u5E86": "\u7EAA\u5FF5\u4E2D\u534E\u4EBA\u6C11\u5171\u548C\u56FD\u6210\u7ACB\u7684\u516C\u5171\u8282\u65E5\uFF0C\u65E5\u671F\u5BF9\u5E94 1949 \u5E74 10 \u6708 1 \u65E5\u7684\u5F00\u56FD\u5386\u53F2\u8282\u70B9\u3002"
+};
 var STATUS_LABELS = {
   green: "\u6B63\u5E38",
   yellow: "\u5173\u6CE8",
@@ -488,13 +497,15 @@ var V9CalendarView = class extends import_obsidian.ItemView {
     });
     const recentEvents = [...data.calendar].sort((a, b) => b.date.localeCompare(a.date) || cleanEventText(b.text).localeCompare(cleanEventText(a.text)));
     const selectedEvents = this.selectedDate ? recentEvents.filter((item) => item.date === this.selectedDate) : recentEvents;
+    const holidayEvents = buildHolidayEvents(this.selectedDate, this.monthOffset);
+    const visibleEvents = [...holidayEvents, ...selectedEvents];
     const sectionHead = this.contentEl.createDiv({ cls: "v9-calendar__section-head" });
     sectionHead.createDiv({
       cls: "v9-calendar__section-title",
       text: this.selectedDate ? `${formatCalendarDate(this.selectedDate)}\u4E8B\u52A1` : "\u8FD1\u671F\u4E8B\u52A1"
     });
     const sectionMeta = sectionHead.createDiv({ cls: "v9-calendar__section-actions" });
-    sectionMeta.createSpan({ cls: "v9-calendar__section-count", text: `${selectedEvents.length} \u6761` });
+    sectionMeta.createSpan({ cls: "v9-calendar__section-count", text: `${visibleEvents.length} \u6761` });
     const scopeTabs = sectionMeta.createDiv({ cls: "v9-calendar__scope-tabs" });
     const todayKey = toDateKey(/* @__PURE__ */ new Date());
     const todayButton = scopeTabs.createEl("button", {
@@ -514,7 +525,7 @@ var V9CalendarView = class extends import_obsidian.ItemView {
       this.selectedDate = null;
       this.render();
     });
-    renderEventCards(this.contentEl, selectedEvents, this.plugin, "v9-calendar", this.selectedDate ? 24 : 12);
+    renderEventCards(this.contentEl, visibleEvents, this.plugin, "v9-calendar", this.selectedDate ? 24 : 12);
   }
 };
 var V9DashboardView = class extends import_obsidian.ItemView {
@@ -1301,20 +1312,29 @@ function isNoiseDateLine(text) {
 function renderEventCards(parent, items, plugin, prefix, limit) {
   const wrap = parent.createDiv({ cls: `${prefix}__events` });
   for (const item of items.slice(0, limit)) {
-    const card = wrap.createDiv({ cls: `${prefix}__event-card ${item.overdue ? "is-overdue" : ""}` });
+    const card = wrap.createDiv({
+      cls: [
+        `${prefix}__event-card`,
+        item.overdue ? "is-overdue" : "",
+        item.kind === "holiday" ? "is-holiday" : ""
+      ].filter(Boolean).join(" ")
+    });
     const meta = card.createDiv({ cls: `${prefix}__event-meta-box` });
     meta.createDiv({ cls: `${prefix}__event-date-day`, text: item.date.slice(5) });
-    meta.createDiv({ cls: `${prefix}__event-date-module`, text: moduleLabel(item.file) });
+    meta.createDiv({ cls: `${prefix}__event-date-module`, text: item.module || moduleLabel(item.file) });
     const body = card.createDiv({ cls: `${prefix}__event-body` });
     body.createDiv({ cls: `${prefix}__event-title`, text: eventTitle(item) });
     body.createDiv({ cls: `${prefix}__event-text`, text: eventSummary(item) });
-    const fileRow = body.createDiv({ cls: `${prefix}__event-files` });
-    for (const fileRef of eventFileRefs(item, plugin).slice(0, 4)) {
-      const fileButton = fileRow.createEl("button", { cls: `${prefix}__event-file`, text: fileRef.name });
-      fileButton.onClickEvent((event) => {
-        event.stopPropagation();
-        plugin.openVaultFileInRight(fileRef.path);
-      });
+    const fileRefs = eventFileRefs(item, plugin).slice(0, 4);
+    if (fileRefs.length) {
+      const fileRow = body.createDiv({ cls: `${prefix}__event-files` });
+      for (const fileRef of fileRefs) {
+        const fileButton = fileRow.createEl("button", { cls: `${prefix}__event-file`, text: fileRef.name });
+        fileButton.onClickEvent((event) => {
+          event.stopPropagation();
+          plugin.openVaultFileInRight(fileRef.path);
+        });
+      }
     }
   }
   if (!items.length) {
@@ -1335,10 +1355,16 @@ function cleanEventText(text) {
   return text.replace(/^>\s*/, "").replace(/^\s*[-*]\s+/, "").replace(/^\s*#+\s*/, "").replace(/\*\*/g, "").replace(/\s*\|\s*/g, " \xB7 ").replace(/\s+/g, " ").trim();
 }
 function eventTitle(item) {
+  if (item.kind === "holiday") {
+    return `${item.module}\u6765\u5386\u79D1\u666E`;
+  }
   const text = cleanEventText(item.text).replace(item.date, "").replace(/^[·\s-]+/, "");
   return compact(text.split(/[。；;|]/)[0] || `${moduleLabel(item.file)}\u63D0\u9192`, 44);
 }
 function eventSummary(item) {
+  if (item.kind === "holiday") {
+    return item.text;
+  }
   const text = cleanEventText(item.text).replace(item.date, "").replace(/^[·\s-]+/, "");
   if (!text) {
     return `${moduleLabel(item.file)}\u5728 ${item.date} \u6709\u4E8B\u52A1\u8BB0\u5F55\u3002`;
@@ -1346,6 +1372,9 @@ function eventSummary(item) {
   return compact(text, 96);
 }
 function eventFileRefs(item, plugin) {
+  if (item.kind === "holiday") {
+    return [];
+  }
   const refs = [];
   const seen = /* @__PURE__ */ new Set();
   const pushFile = (file) => {
@@ -1366,6 +1395,38 @@ function eventFileRefs(item, plugin) {
   const source = plugin.app.vault.getAbstractFileByPath(item.file);
   pushFile(source);
   return refs.length ? refs : [{ name: displayFileName(item.file), path: item.file }];
+}
+function buildHolidayEvents(selectedDate, monthOffset) {
+  if (selectedDate) {
+    const holiday = getMainlandHoliday(selectedDate);
+    return holiday && holiday.type === "holiday" ? [holidayEvent(selectedDate, holiday)] : [];
+  }
+  const today = /* @__PURE__ */ new Date();
+  const shown = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
+  const monthKey = `${shown.getFullYear()}-${String(shown.getMonth() + 1).padStart(2, "0")}`;
+  const seen = /* @__PURE__ */ new Set();
+  const events = [];
+  for (const [date, holiday] of Object.entries(MAINLAND_HOLIDAYS)) {
+    if (!date.startsWith(monthKey) || holiday.type !== "holiday" || seen.has(holiday.label)) {
+      continue;
+    }
+    seen.add(holiday.label);
+    events.push(holidayEvent(date, holiday));
+  }
+  return events.sort((a, b) => b.date.localeCompare(a.date));
+}
+function holidayEvent(date, holiday) {
+  const module = holidayDisplayName(holiday);
+  return {
+    kind: "holiday",
+    date,
+    module,
+    text: HOLIDAY_EXPLAINERS[holiday.label] || `${module}\u662F\u4E2D\u56FD\u8282\u5047\u65E5\u4F53\u7CFB\u4E2D\u7684\u91CD\u8981\u8282\u70B9\u3002`,
+    overdue: false
+  };
+}
+function holidayDisplayName(holiday) {
+  return String(holiday.name || holiday.label).replace(/\u5047\u671F|\u8C03\u4F11\u4E0A\u73ED/g, "");
 }
 function displayFileName(path) {
   return String(path || "").split("/").pop() || String(path || "");
@@ -1510,12 +1571,16 @@ function renderMonthGrid(parent, data, plugin, prefix, monthOffset, controls) {
       }
     });
     cell.createSpan({ cls: `${prefix}__day-number`, text: String(day) });
-    if (holiday) {
+    if (holiday && holiday.type === "workday") {
       cell.createSpan({ cls: `${prefix}__day-label is-${holiday.type}`, text: holiday.label });
     }
-    if (items.length) {
+    if ((holiday == null ? void 0 : holiday.type) === "holiday" || items.length) {
       const dots = cell.createSpan({ cls: `${prefix}__day-dots` });
-      for (let dot = 0; dot < Math.min(4, items.length); dot += 1) {
+      if ((holiday == null ? void 0 : holiday.type) === "holiday") {
+        dots.createSpan({ cls: `${prefix}__day-dot is-holiday` });
+      }
+      const projectDotLimit = (holiday == null ? void 0 : holiday.type) === "holiday" ? 3 : 4;
+      for (let dot = 0; dot < Math.min(projectDotLimit, items.length); dot += 1) {
         dots.createSpan({ cls: `${prefix}__day-dot` });
       }
     }

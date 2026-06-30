@@ -264,14 +264,14 @@
 
 .v9-dashboard__status-metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .v9-dashboard__status-metric {
   min-width: 0;
-  min-height: 88px;
-  padding: 12px 34px 12px 14px;
+  min-height: 76px;
+  padding: 10px 30px 10px 12px;
   border-left-width: 3px;
 }
 
@@ -298,10 +298,10 @@
 }
 
 .v9-dashboard__status-value {
-  margin: 8px 0 5px;
+  margin: 6px 0 4px;
   overflow: hidden;
   color: var(--text-normal);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   line-height: 1.1;
   text-overflow: ellipsis;
@@ -641,8 +641,8 @@
 
 .v9-dashboard__knowledge-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
   margin-top: 12px;
 }
 
@@ -652,12 +652,12 @@
   align-content: start;
   width: 100%;
   min-width: 0;
-  min-height: 168px;
+  min-height: 132px;
   overflow: hidden;
   border: 1px solid var(--v9-dash-border);
   border-left-width: 3px;
   border-radius: 6px;
-  padding: 12px 34px 12px 12px;
+  padding: 10px 32px 10px 10px;
   background: var(--v9-dash-panel);
   color: var(--text-normal);
   cursor: pointer;
@@ -707,7 +707,7 @@
 
 .v9-dashboard__knowledge-value {
   overflow: hidden;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   line-height: 1.1;
   text-overflow: ellipsis;
@@ -718,7 +718,7 @@
 .v9-dashboard__knowledge-detail,
 .v9-dashboard__knowledge-issues {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.4;
 }
 
@@ -1000,8 +1000,9 @@
 }
 
 .v9-dashboard__event-date-module {
-  color: var(--text-faint);
+  color: var(--text-normal);
   font-size: 10px;
+  font-weight: 700;
   line-height: 1.2;
 }
 
@@ -1067,6 +1068,7 @@
   .v9-dashboard__top,
   .v9-dashboard__burn,
   .v9-dashboard__cards,
+  .v9-dashboard__status-metrics,
   .v9-dashboard__lower,
   .v9-dashboard__split,
   .v9-dashboard__lanes {
@@ -1293,9 +1295,9 @@
   color: color-mix(in srgb, var(--text-muted) 78%, var(--v9-cal-accent));
 }
 
-.v9-calendar__day.is-holiday {
-  border-color: color-mix(in srgb, var(--v9-cal-holiday) 30%, transparent);
-  background: var(--v9-cal-holiday-soft) !important;
+.v9-calendar__day.is-holiday:not(.is-selected):not(.is-today) {
+  border-color: transparent;
+  background: transparent !important;
   color: var(--text-normal);
 }
 
@@ -1331,10 +1333,6 @@
   white-space: nowrap;
 }
 
-.v9-calendar__day-label.is-holiday {
-  color: var(--v9-cal-holiday);
-}
-
 .v9-calendar__day-label.is-workday {
   min-width: 14px;
   border-radius: 999px;
@@ -1358,6 +1356,10 @@
   height: 4px;
   border-radius: 999px;
   background: var(--v9-cal-accent);
+}
+
+.v9-calendar__day-dot.is-holiday {
+  background: var(--v9-cal-holiday);
 }
 
 .v9-calendar__section-head {
@@ -1439,12 +1441,18 @@
   border-left: 3px solid var(--v9-cal-bad);
 }
 
+.v9-calendar__event-card.is-holiday {
+  border-left: 3px solid var(--v9-cal-holiday);
+}
+
 .v9-calendar__event-card:hover {
   background: var(--background-modifier-hover);
 }
 
 .v9-calendar__event-card.is-overdue:hover,
-.v9-calendar__event-card.is-overdue:focus-visible {
+.v9-calendar__event-card.is-overdue:focus-visible,
+.v9-calendar__event-card.is-holiday:hover,
+.v9-calendar__event-card.is-holiday:focus-visible {
   background: linear-gradient(90deg, var(--v9-cal-bad-soft), var(--v9-cal-panel) 44%);
 }
 
@@ -1468,8 +1476,9 @@
 
 .v9-calendar__event-date-module {
   align-self: start;
-  color: var(--text-faint);
+  color: var(--text-normal);
   font-size: 10px;
+  font-weight: 700;
   line-height: 1.25;
   overflow-wrap: anywhere;
   word-break: break-word;
