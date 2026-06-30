@@ -8,6 +8,7 @@ The current UI is optimized for Chinese project vaults, but the scan roots and l
 
 - Project overview with current iteration detection.
 - Calendar view linked to dated affairs instead of raw file modification dates.
+- Mainland China 2026 holiday and adjusted workday labels in the calendar view.
 - Current-iteration task board.
 - Note metadata health checks for iteration notes.
 - Project file activity heatmap.
@@ -15,6 +16,8 @@ The current UI is optimized for Chinese project vaults, but the scan roots and l
 - Wiki broken-link scan.
 - Optional local GBrain health monitor.
 - Optional local inspection status integration through `status-latest.json`.
+
+The 2026 Mainland China holiday data follows the official State Council Gazette notice: <https://www.gov.cn/gongbao/2025/issue_12406/202511/content_7048922.html>.
 
 ## Read-Only Behavior
 

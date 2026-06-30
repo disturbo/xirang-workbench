@@ -1095,6 +1095,9 @@
   --v9-cal-warn: var(--color-yellow);
   --v9-cal-bad: var(--interactive-accent);
   --v9-cal-bad-soft: color-mix(in srgb, var(--interactive-accent) 14%, var(--background-primary));
+  --v9-cal-holiday: var(--color-red, #d33a2c);
+  --v9-cal-holiday-soft: color-mix(in srgb, var(--v9-cal-holiday) 12%, var(--background-primary));
+  --v9-cal-workday-soft: color-mix(in srgb, var(--text-muted) 12%, var(--background-primary));
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1203,7 +1206,7 @@
 .v9-calendar__month {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  grid-auto-rows: minmax(34px, auto);
+  grid-auto-rows: minmax(42px, auto);
   gap: 3px;
   padding-bottom: 4px;
 }
@@ -1216,12 +1219,12 @@
 
 .v9-calendar__day {
   display: grid;
-  grid-template-rows: 17px 7px;
+  grid-template-rows: 16px 11px 6px;
   align-content: center;
   justify-items: center;
   width: 100%;
   min-width: 0;
-  min-height: 34px;
+  min-height: 42px;
   border: 1px solid transparent;
   border-radius: 5px;
   padding: 3px 1px;
@@ -1251,7 +1254,7 @@
 
 .v9-calendar__day.is-today {
   border-color: var(--v9-cal-accent);
-  background: color-mix(in srgb, var(--v9-cal-accent) 25%, var(--v9-cal-panel));
+  background: color-mix(in srgb, var(--v9-cal-accent) 25%, var(--v9-cal-panel)) !important;
   font-weight: 700;
 }
 
@@ -1264,6 +1267,22 @@
 
 .v9-calendar__day.is-overdue {
   box-shadow: none;
+}
+
+.v9-calendar__day.is-weekend {
+  color: color-mix(in srgb, var(--text-muted) 78%, var(--v9-cal-accent));
+}
+
+.v9-calendar__day.is-holiday {
+  border-color: color-mix(in srgb, var(--v9-cal-holiday) 30%, transparent);
+  background: var(--v9-cal-holiday-soft) !important;
+  color: var(--text-normal);
+}
+
+.v9-calendar__day.is-workday {
+  border-color: color-mix(in srgb, var(--text-muted) 35%, transparent);
+  background: var(--v9-cal-workday-soft) !important;
+  color: var(--text-muted);
 }
 
 .v9-calendar__day.is-empty {
@@ -1279,9 +1298,34 @@
   text-align: center;
 }
 
+.v9-calendar__day-label {
+  display: block;
+  grid-row: 2;
+  max-width: 100%;
+  min-height: 10px;
+  overflow: hidden;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.v9-calendar__day-label.is-holiday {
+  color: var(--v9-cal-holiday);
+}
+
+.v9-calendar__day-label.is-workday {
+  min-width: 14px;
+  border-radius: 999px;
+  padding: 0 3px;
+  background: color-mix(in srgb, var(--text-muted) 18%, transparent);
+  color: var(--text-muted);
+}
+
 .v9-calendar__day-dots {
   display: flex;
-  grid-row: 2;
+  grid-row: 3;
   gap: 2px;
   justify-content: center;
   align-items: center;

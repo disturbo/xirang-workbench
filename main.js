@@ -46,7 +46,49 @@ var LLM_WIKI_MATURITY_LEVELS = {
   "\u5DF2\u8BBE\u8BA1\u65B9\u6848": 3,
   "\u5DF2\u53D1\u5E03PRD": 4
 };
-var PLUGIN_VERSION = "0.6.0";
+var PLUGIN_VERSION = "0.6.1";
+// Source: https://www.gov.cn/gongbao/2025/issue_12406/202511/content_7048922.html
+var MAINLAND_HOLIDAYS = {
+  "2026-01-01": { type: "holiday", label: "\u5143\u65E6", name: "\u5143\u65E6\u5047\u671F" },
+  "2026-01-02": { type: "holiday", label: "\u5143\u65E6", name: "\u5143\u65E6\u5047\u671F" },
+  "2026-01-03": { type: "holiday", label: "\u5143\u65E6", name: "\u5143\u65E6\u5047\u671F" },
+  "2026-01-04": { type: "workday", label: "\u73ED", name: "\u5143\u65E6\u8C03\u4F11\u4E0A\u73ED" },
+  "2026-02-14": { type: "workday", label: "\u73ED", name: "\u6625\u8282\u8C03\u4F11\u4E0A\u73ED" },
+  "2026-02-15": { type: "holiday", label: "\u6625\u8282", name: "\u6625\u8282\u5047\u671F" },
+  "2026-02-16": { type: "holiday", label: "\u6625\u8282", name: "\u6625\u8282\u5047\u671F" },
+  "2026-02-17": { type: "holiday", label: "\u6625\u8282", name: "\u6625\u8282\u5047\u671F" },
+  "2026-02-18": { type: "holiday", label: "\u6625\u8282", name: "\u6625\u8282\u5047\u671F" },
+  "2026-02-19": { type: "holiday", label: "\u6625\u8282", name: "\u6625\u8282\u5047\u671F" },
+  "2026-02-20": { type: "holiday", label: "\u6625\u8282", name: "\u6625\u8282\u5047\u671F" },
+  "2026-02-21": { type: "holiday", label: "\u6625\u8282", name: "\u6625\u8282\u5047\u671F" },
+  "2026-02-22": { type: "holiday", label: "\u6625\u8282", name: "\u6625\u8282\u5047\u671F" },
+  "2026-02-23": { type: "holiday", label: "\u6625\u8282", name: "\u6625\u8282\u5047\u671F" },
+  "2026-02-28": { type: "workday", label: "\u73ED", name: "\u6625\u8282\u8C03\u4F11\u4E0A\u73ED" },
+  "2026-04-04": { type: "holiday", label: "\u6E05\u660E", name: "\u6E05\u660E\u8282\u5047\u671F" },
+  "2026-04-05": { type: "holiday", label: "\u6E05\u660E", name: "\u6E05\u660E\u8282\u5047\u671F" },
+  "2026-04-06": { type: "holiday", label: "\u6E05\u660E", name: "\u6E05\u660E\u8282\u5047\u671F" },
+  "2026-05-01": { type: "holiday", label: "\u52B3\u52A8", name: "\u52B3\u52A8\u8282\u5047\u671F" },
+  "2026-05-02": { type: "holiday", label: "\u52B3\u52A8", name: "\u52B3\u52A8\u8282\u5047\u671F" },
+  "2026-05-03": { type: "holiday", label: "\u52B3\u52A8", name: "\u52B3\u52A8\u8282\u5047\u671F" },
+  "2026-05-04": { type: "holiday", label: "\u52B3\u52A8", name: "\u52B3\u52A8\u8282\u5047\u671F" },
+  "2026-05-05": { type: "holiday", label: "\u52B3\u52A8", name: "\u52B3\u52A8\u8282\u5047\u671F" },
+  "2026-05-09": { type: "workday", label: "\u73ED", name: "\u52B3\u52A8\u8282\u8C03\u4F11\u4E0A\u73ED" },
+  "2026-06-19": { type: "holiday", label: "\u7AEF\u5348", name: "\u7AEF\u5348\u8282\u5047\u671F" },
+  "2026-06-20": { type: "holiday", label: "\u7AEF\u5348", name: "\u7AEF\u5348\u8282\u5047\u671F" },
+  "2026-06-21": { type: "holiday", label: "\u7AEF\u5348", name: "\u7AEF\u5348\u8282\u5047\u671F" },
+  "2026-09-20": { type: "workday", label: "\u73ED", name: "\u56FD\u5E86\u8282\u8C03\u4F11\u4E0A\u73ED" },
+  "2026-09-25": { type: "holiday", label: "\u4E2D\u79CB", name: "\u4E2D\u79CB\u8282\u5047\u671F" },
+  "2026-09-26": { type: "holiday", label: "\u4E2D\u79CB", name: "\u4E2D\u79CB\u8282\u5047\u671F" },
+  "2026-09-27": { type: "holiday", label: "\u4E2D\u79CB", name: "\u4E2D\u79CB\u8282\u5047\u671F" },
+  "2026-10-01": { type: "holiday", label: "\u56FD\u5E86", name: "\u56FD\u5E86\u8282\u5047\u671F" },
+  "2026-10-02": { type: "holiday", label: "\u56FD\u5E86", name: "\u56FD\u5E86\u8282\u5047\u671F" },
+  "2026-10-03": { type: "holiday", label: "\u56FD\u5E86", name: "\u56FD\u5E86\u8282\u5047\u671F" },
+  "2026-10-04": { type: "holiday", label: "\u56FD\u5E86", name: "\u56FD\u5E86\u8282\u5047\u671F" },
+  "2026-10-05": { type: "holiday", label: "\u56FD\u5E86", name: "\u56FD\u5E86\u8282\u5047\u671F" },
+  "2026-10-06": { type: "holiday", label: "\u56FD\u5E86", name: "\u56FD\u5E86\u8282\u5047\u671F" },
+  "2026-10-07": { type: "holiday", label: "\u56FD\u5E86", name: "\u56FD\u5E86\u8282\u5047\u671F" },
+  "2026-10-10": { type: "workday", label: "\u73ED", name: "\u56FD\u5E86\u8282\u8C03\u4F11\u4E0A\u73ED" }
+};
 var STATUS_LABELS = {
   green: "\u6B63\u5E38",
   yellow: "\u5173\u6CE8",
@@ -1431,22 +1473,40 @@ function renderMonthGrid(parent, data, plugin, prefix, monthOffset, controls) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   for (let day = 1; day <= daysInMonth; day += 1) {
     const key = `${monthKey}-${String(day).padStart(2, "0")}`;
+    const date = new Date(year, month, day);
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+    const holiday = getMainlandHoliday(key);
     const items = byDate.get(key) || [];
+    const titleLines = [];
+    if (holiday) {
+      titleLines.push(`${key}: ${holiday.name}`);
+    }
+    if (items.length) {
+      titleLines.push(...items.map((item) => compact(cleanEventText(item.text), 80)));
+    }
+    if (!titleLines.length) {
+      titleLines.push(`${key}: \u6682\u65E0\u4E8B\u52A1`);
+    }
     const cls = [
       `${prefix}__day`,
       key === toDateKey(today) ? "is-today" : "",
       key === controls.selectedDate ? "is-selected" : "",
       controls.onDateClick ? "is-selectable" : "",
+      holiday ? `is-${holiday.type}` : "",
+      !holiday && isWeekend ? "is-weekend" : "",
       items.length ? "has-items" : "",
       items.some((item) => item.overdue) ? "is-overdue" : ""
     ].filter(Boolean).join(" ");
     const cell = monthGrid.createEl("button", {
       cls,
       attr: {
-        title: items.length ? items.map((item) => compact(cleanEventText(item.text), 80)).join("\n") : `${key}: \u6682\u65E0\u4E8B\u52A1`
+        title: titleLines.join("\n")
       }
     });
     cell.createSpan({ cls: `${prefix}__day-number`, text: String(day) });
+    if (holiday) {
+      cell.createSpan({ cls: `${prefix}__day-label is-${holiday.type}`, text: holiday.label });
+    }
     if (items.length) {
       const dots = cell.createSpan({ cls: `${prefix}__day-dots` });
       for (let dot = 0; dot < Math.min(4, items.length); dot += 1) {
@@ -1459,6 +1519,9 @@ function renderMonthGrid(parent, data, plugin, prefix, monthOffset, controls) {
       cell.onClickEvent(() => plugin.openVaultFile(items[0].file));
     }
   }
+}
+function getMainlandHoliday(dateKey) {
+  return MAINLAND_HOLIDAYS[dateKey] || null;
 }
 function buildSuggestions(report, tasks, calendar, noteIssues) {
   var _a, _b;
